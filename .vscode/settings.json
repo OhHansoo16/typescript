@@ -1,0 +1,7 @@
+{
+"editor.detectIndentation": false,
+"editor.tabSize": 2,
+"js/ts.implicitProjectConfig.experimentalDecorators": false,
+"js/ts.implicitProjectConfig.target": "ES6",
+"js/ts.implicitProjectConfig.module": "ESNext"
+}
