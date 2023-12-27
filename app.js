@@ -1,4 +1,10 @@
-// decorater
+var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
+    var useValue = arguments.length > 2;
+    for (var i = 0; i < initializers.length; i++) {
+        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
+    }
+    return useValue ? value : void 0;
+};
 var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
     function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
     var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
@@ -26,54 +32,57 @@ var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, 
     if (target) Object.defineProperty(target, contextIn.name, descriptor);
     done = true;
 };
-var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
-    var useValue = arguments.length > 2;
-    for (var i = 0; i < initializers.length; i++) {
-        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
-    }
-    return useValue ? value : void 0;
-};
-var __setFunctionName = (this && this.__setFunctionName) || function (f, name, prefix) {
-    if (typeof name === "symbol") name = name.description ? "[".concat(name.description, "]") : "";
-    return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
-};
-function Logger(logString) {
-    return function (constructor) {
-        console.log(logString);
-        console.log(constructor);
+// autobind decorator
+function autobind(_, _2, descriptor) {
+    var originalMethod = descriptor.value;
+    var adjDescriptor = {
+        configurable: true,
+        get: function () {
+            var boundFn = originalMethod.bind(this);
+            return boundFn;
+        },
     };
+    return adjDescriptor;
 }
-function WithTemplate(template, hookId) {
-    return function (_) {
-        console.log("うんち");
-        var hookEl = document.getElementById(hookId);
-        if (hookEl) {
-            hookEl.innerHTML = template;
-        }
-    };
-}
-// @Logger("ログ出力中 - PERSON")
-var Person = function () {
-    var _classDecorators = [WithTemplate("<h1>Personオブジェクト</h1>", "app")];
-    var _classDescriptor;
-    var _classExtraInitializers = [];
-    var _classThis;
-    var Person = _classThis = /** @class */ (function () {
-        function Person_1() {
-            this.name = "Max";
-            console.log("Personオブジェクトを作成中...");
-        }
-        return Person_1;
-    }());
-    __setFunctionName(_classThis, "Person");
-    (function () {
-        var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
-        __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
-        Person = _classThis = _classDescriptor.value;
-        if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
-        __runInitializers(_classThis, _classExtraInitializers);
-    })();
-    return Person = _classThis;
+// ProjectInput Class
+var ProjectInput = function () {
+    var _a;
+    var _instanceExtraInitializers = [];
+    var _submitHandler_decorators;
+    return _a = /** @class */ (function () {
+            function ProjectInput() {
+                this.templateElement = (__runInitializers(this, _instanceExtraInitializers), void 0);
+                this.templateElement = document.getElementById("project-input");
+                this.hostElement = document.getElementById("app");
+                var importedNode = document.importNode(this.templateElement.content, true);
+                this.element = importedNode.firstElementChild;
+                this.element.id = "user-input";
+                this.titleInputElement = this.element.querySelector("#title");
+                this.descriptionInputElement = this.element.querySelector("#description");
+                this.mandayInputElement = this.element.querySelector("#manday");
+                this.configure();
+                this.attach();
+            }
+            ProjectInput.prototype.submitHandler = function (event) {
+                event.preventDefault();
+                console.log(this);
+                console.log(this.titleInputElement);
+                console.log(this.titleInputElement.value);
+            };
+            ProjectInput.prototype.configure = function () {
+                this.element.addEventListener("submit", this.submitHandler);
+            };
+            ProjectInput.prototype.attach = function () {
+                this.hostElement.insertAdjacentElement("afterbegin", this.element);
+            };
+            return ProjectInput;
+        }()),
+        (function () {
+            var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
+            _submitHandler_decorators = [autobind];
+            __esDecorate(_a, null, _submitHandler_decorators, { kind: "method", name: "submitHandler", static: false, private: false, access: { has: function (obj) { return "submitHandler" in obj; }, get: function (obj) { return obj.submitHandler; } }, metadata: _metadata }, null, _instanceExtraInitializers);
+            if (_metadata) Object.defineProperty(_a, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+        })(),
+        _a;
 }();
-var pers = new Person();
-console.log(pers);
+var prjInput = new ProjectInput();
